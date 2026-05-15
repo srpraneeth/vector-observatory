@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: uv sync --extra app --group dev
+
+      - name: Lint
+        run: |
+          uv run ruff check vector_observatory tests
+          uv run ruff format --check vector_observatory tests
+
+      - name: Test
+        run: uv run pytest --cov=vector_observatory --cov-report=term-missing
