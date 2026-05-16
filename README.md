@@ -50,8 +50,8 @@ All results are stored locally in DuckDB — one file per experiment, no externa
 **Requirements:** Python 3.12+, [uv](https://docs.astral.sh/uv/)
 
 ```bash
-git clone https://github.com/your-username/embeddings-observatory
-cd embeddings-observatory
+git clone https://https://github.com/srpraneeth/vector-observatory
+cd vector-observatory
 
 # Install dependencies
 uv sync --extra app
