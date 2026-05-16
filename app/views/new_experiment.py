@@ -142,7 +142,7 @@ def render(state) -> None:
             clust = compute_cluster_metrics(ds.cluster_labels)
 
             project = Experiment.create(exp_name)
-            experiment.store.save_run(ds, config, geo, clust)
+            project.store.save_run(ds, config, geo, clust)
 
             index = KNNIndex()
             index.build(ds)

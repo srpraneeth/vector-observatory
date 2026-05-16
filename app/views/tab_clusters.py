@@ -6,6 +6,7 @@ import streamlit as st
 
 from state import AppState
 from vector_observatory.visualization.cluster_map import build_cluster_overview
+from vector_observatory.metrics.geometry import compute_geometry_metrics
 
 
 def render(state: AppState) -> None:
@@ -53,4 +54,20 @@ def render(state: AppState) -> None:
             cluster_ds = ds.filter_by_cluster(int(cluster_id))
 
         st.subheader(f"Cluster {cluster_id} — {cluster_ds.n_samples:,} points")
+
+        with st.spinner("Computing cluster metrics…"):
+            geo = compute_geometry_metrics(cluster_ds.embeddings)
+
+        mc1, mc2 = st.columns(2)
+        mc1.metric(
+            "Anisotropy",
+            f"{geo.anisotropy:.3f}",
+            help="Embedding collapse within this cluster. Lower = more spread out.",
+        )
+        mc2.metric(
+            "Intrinsic Dim",
+            f"{geo.intrinsic_dim:.1f}",
+            help="Effective dimensionality of this cluster's embeddings.",
+        )
+
         st.dataframe(cluster_ds.metadata.reset_index(drop=True), use_container_width=True)

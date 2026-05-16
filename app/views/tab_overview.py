@@ -1,5 +1,6 @@
-"""Overview tab — dataset info + health snapshot."""
+"""Overview tab — dataset info + health snapshot + metadata distributions."""
 
+import plotly.express as px
 import pandas as pd
 import streamlit as st
 
@@ -35,6 +36,43 @@ def render(state: AppState) -> None:
 
     st.subheader("Sample rows")
     st.dataframe(ds.metadata.head(10).reset_index(drop=True), use_container_width=True)
+
+    # ------------------------------------------------------------------
+    # Metadata distributions
+    # ------------------------------------------------------------------
+    st.subheader("Metadata Distributions")
+
+    numeric_cols = ds.metadata.select_dtypes(include="number").columns.tolist()
+    categorical_cols = [c for c in ds.metadata.columns if c not in numeric_cols]
+
+    if not numeric_cols and not categorical_cols:
+        st.caption("No metadata columns to visualise.")
+    else:
+        dist_col = st.selectbox(
+            "Column",
+            numeric_cols + categorical_cols,
+            key="overview_dist_col",
+        )
+        if dist_col in numeric_cols:
+            fig = px.histogram(
+                ds.metadata,
+                x=dist_col,
+                nbins=40,
+                title=f"Distribution of {dist_col}",
+            )
+            fig.update_layout(showlegend=False, margin=dict(t=40, b=20, l=20, r=20))
+            st.plotly_chart(fig, use_container_width=True, key="overview_dist_chart")
+        else:
+            counts = ds.metadata[dist_col].value_counts().head(30).reset_index()
+            counts.columns = [dist_col, "count"]
+            fig = px.bar(
+                counts,
+                x=dist_col,
+                y="count",
+                title=f"Value counts — {dist_col} (top {len(counts)})",
+            )
+            fig.update_layout(showlegend=False, margin=dict(t=40, b=20, l=20, r=20))
+            st.plotly_chart(fig, use_container_width=True, key="overview_dist_chart")
 
     st.divider()
 

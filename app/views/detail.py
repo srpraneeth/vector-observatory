@@ -51,8 +51,8 @@ def render(state: AppState) -> None:
     st.divider()
 
     # Tabs
-    tab_overview, tab_explore, tab_clusters, tab_metrics, tab_drift = st.tabs([
-        "Overview", "Explore", "Clusters", "Metrics", "Drift"
+    tab_overview, tab_explore, tab_clusters, tab_metrics, tab_drift, tab_outliers = st.tabs([
+        "Overview", "Explore", "Clusters", "Metrics", "Drift", "Outliers"
     ])
 
     with tab_overview:
@@ -73,4 +73,8 @@ def render(state: AppState) -> None:
 
     with tab_drift:
         from views.tab_drift import render as render_tab
+        render_tab(state)
+
+    with tab_outliers:
+        from views.tab_outliers import render as render_tab
         render_tab(state)

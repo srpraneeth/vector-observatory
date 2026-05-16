@@ -31,6 +31,19 @@ def render(state: AppState) -> None:
         color_options = ["cluster"] + list(ds.metadata.columns)
         color_by = st.selectbox("Color by", color_options)
 
+        st.divider()
+        st.subheader("Export")
+        visible_ds = state.visible_dataset
+        export_df = visible_ds.metadata.copy()
+        export_df.insert(0, "id", visible_ds.ids)
+        st.download_button(
+            "Download visible points CSV",
+            data=export_df.to_csv(index=False).encode(),
+            file_name=f"{ds.name}_filtered.csv",
+            mime="text/csv",
+            use_container_width=True,
+        )
+
     visible_ds = state.visible_dataset
     st.caption(f"{visible_ds.n_samples:,} / {ds.n_samples:,} points visible")
 

@@ -70,15 +70,15 @@ def load_experiment(name: str, state: AppState) -> AppState:
     state.filter_mask = None
     state.selected_point_id = None
 
-    datasets = experiment.store.list_datasets()
+    datasets = project.store.list_datasets()
     if not datasets:
         return state
 
-    runs = experiment.store.list_runs(datasets[0])
+    runs = project.store.list_runs(datasets[0])
     if not runs:
         return state
 
-    ds = experiment.store.load_run(datasets[0], runs[0]["run_id"])
+    ds = project.store.load_run(datasets[0], runs[0]["run_id"])
     index = KNNIndex()
     index.build(ds)
 
