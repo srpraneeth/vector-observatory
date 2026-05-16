@@ -22,6 +22,7 @@ class DBSCANClusterer:
 
     def fit_predict(self, X: np.ndarray) -> np.ndarray:
         from sklearn.cluster import DBSCAN
+
         clusterer = DBSCAN(
             eps=self._config.eps,
             min_samples=self._config.min_samples,

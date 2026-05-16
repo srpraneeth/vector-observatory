@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-
 # ------------------------------------------------------------------
 # Reducer configs
 # ------------------------------------------------------------------
+
 
 @dataclass
 class UMAPConfig:
@@ -34,6 +34,7 @@ class PCAConfig:
 # Clusterer configs
 # ------------------------------------------------------------------
 
+
 @dataclass
 class HDBSCANConfig:
     min_cluster_size: int = 10
@@ -57,6 +58,7 @@ class KMeansConfig:
 # ------------------------------------------------------------------
 # Pipeline config
 # ------------------------------------------------------------------
+
 
 @dataclass
 class PipelineConfig:

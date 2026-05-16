@@ -31,6 +31,7 @@ class UMAPReducer:
 
     def fit_transform(self, X: np.ndarray) -> np.ndarray:
         import umap
+
         self._reducer = umap.UMAP(
             n_components=self._config.n_components,
             n_neighbors=self._config.n_neighbors,

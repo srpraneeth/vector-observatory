@@ -4,16 +4,14 @@ import uuid
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-import numpy as np
-
+from ..clustering.hdbscan_ import HDBSCANClusterer
 from ..dataset import EmbeddingDataset
 from ..reducers.umap import UMAPReducer
-from ..clustering.hdbscan_ import HDBSCANClusterer
 from .result import PipelineResult
 
 if TYPE_CHECKING:
-    from ..reducers.base import Reducer
     from ..clustering.base import Clusterer
+    from ..reducers.base import Reducer
     from ..storage.experiment import Experiment
 
 
@@ -52,7 +50,9 @@ class EmbeddingPipeline:
         metadata_cols: list[str] | None = None,
         name: str = "",
     ) -> EmbeddingPipeline:
-        self._dataset = EmbeddingDataset.from_parquet(path, id_col, embedding_col, metadata_cols, name)
+        self._dataset = EmbeddingDataset.from_parquet(
+            path, id_col, embedding_col, metadata_cols, name
+        )
         return self
 
     def from_csv(
@@ -96,7 +96,9 @@ class EmbeddingPipeline:
 
     def run(self) -> PipelineResult:
         if self._dataset is None:
-            raise RuntimeError("No data source set. Call from_parquet(), from_csv(), or from_dataset() first.")
+            raise RuntimeError(
+                "No data source set. Call from_parquet(), from_csv(), or from_dataset() first."
+            )
 
         run_id = str(uuid.uuid4())[:8]
         ds = self._dataset
@@ -110,8 +112,9 @@ class EmbeddingPipeline:
         geo_metrics = None
         clust_metrics = None
         if self._should_compute_metrics:
-            from ..metrics.geometry import compute_geometry_metrics
             from ..metrics.cluster import compute_cluster_metrics
+            from ..metrics.geometry import compute_geometry_metrics
+
             geo_metrics = compute_geometry_metrics(ds.embeddings)
             clust_metrics = compute_cluster_metrics(ds.cluster_labels, ds.embeddings)
 
@@ -123,6 +126,7 @@ class EmbeddingPipeline:
 
         if self._project_name is not None:
             from ..storage.experiment import Experiment
+
             experiment = Experiment.load_or_create(self._project_name)
             experiment.store.save_run(ds, config, geo_metrics, clust_metrics)
 

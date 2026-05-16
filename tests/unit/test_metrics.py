@@ -1,9 +1,9 @@
 import numpy as np
 import pytest
 
-from tests.fixtures.synthetic import isotropic_gaussian, collapsed_embeddings, tight_clusters
-from vector_observatory.metrics.geometry import compute_geometry_metrics
+from tests.fixtures.synthetic import collapsed_embeddings, isotropic_gaussian
 from vector_observatory.metrics.cluster import compute_cluster_metrics
+from vector_observatory.metrics.geometry import compute_geometry_metrics
 
 
 class TestGeometryMetrics:

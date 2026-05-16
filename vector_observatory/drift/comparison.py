@@ -12,10 +12,10 @@ from ..reducers.base import Reducer
 class DriftResult:
     """Result of comparing two embedding datasets in a shared coordinate space."""
 
-    dataset_a: EmbeddingDataset   # with reduced_coords in shared space
-    dataset_b: EmbeddingDataset   # with reduced_coords in shared space
-    mmd_score: float              # Maximum Mean Discrepancy (0 = identical distributions)
-    reducer_config: dict          # reducer was fit on A ∪ B
+    dataset_a: EmbeddingDataset  # with reduced_coords in shared space
+    dataset_b: EmbeddingDataset  # with reduced_coords in shared space
+    mmd_score: float  # Maximum Mean Discrepancy (0 = identical distributions)
+    reducer_config: dict  # reducer was fit on A ∪ B
     cluster_overlap: dict[int, dict]  # {cluster_id: {"a_count": int, "b_count": int}}
 
 
@@ -27,8 +27,14 @@ class DriftComparison:
     compare two embedding distributions.
     """
 
-    def __init__(self, dataset_a: EmbeddingDataset, dataset_b: EmbeddingDataset, reducer: Reducer | None = None) -> None:
+    def __init__(
+        self,
+        dataset_a: EmbeddingDataset,
+        dataset_b: EmbeddingDataset,
+        reducer: Reducer | None = None,
+    ) -> None:
         from ..reducers.umap import UMAPReducer
+
         self.dataset_a = dataset_a
         self.dataset_b = dataset_b
         self.reducer = reducer or UMAPReducer()
@@ -73,7 +79,7 @@ def _compute_mmd(X: np.ndarray, Y: np.ndarray, n_samples: int = 500) -> float:
 
     def rbf(A, B):
         diff = A[:, None] - B[None, :]
-        return np.exp(-np.sum(diff ** 2, axis=-1) / (2 * sigma2))
+        return np.exp(-np.sum(diff**2, axis=-1) / (2 * sigma2))
 
     kxx = rbf(X, X)
     kyy = rbf(Y, Y)

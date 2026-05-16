@@ -18,6 +18,7 @@ class PCAReducer:
 
     def fit_transform(self, X: np.ndarray) -> np.ndarray:
         from sklearn.decomposition import PCA
+
         self._reducer = PCA(n_components=self._config.n_components)
         return self._reducer.fit_transform(X).astype(np.float32)
 

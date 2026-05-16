@@ -7,8 +7,16 @@ from ..dataset import EmbeddingDataset
 
 _NOISE_COLOR = "#cccccc"
 _PALETTE = [
-    "#636EFA", "#EF553B", "#00CC96", "#AB63FA", "#FFA15A",
-    "#19D3F3", "#FF6692", "#B6E880", "#FF97FF", "#FECB52",
+    "#636EFA",
+    "#EF553B",
+    "#00CC96",
+    "#AB63FA",
+    "#FFA15A",
+    "#19D3F3",
+    "#FF6692",
+    "#B6E880",
+    "#FF97FF",
+    "#FECB52",
 ]
 
 
@@ -35,12 +43,11 @@ def build_scatter_2d(
     hover_cols = hover_cols or list(dataset.metadata.columns)
 
     if color_by == "cluster" and dataset.cluster_labels is not None:
-        colors, legend_entries = _colors_from_clusters(dataset.cluster_labels)
+        colors, _ = _colors_from_clusters(dataset.cluster_labels)
     elif color_by in dataset.metadata.columns:
-        colors, legend_entries = _colors_from_column(dataset.metadata[color_by])
+        colors, _ = _colors_from_column(dataset.metadata[color_by])
     else:
         colors = ["#636EFA"] * dataset.n_samples
-        legend_entries = None
 
     customdata = dataset.metadata[hover_cols].values if hover_cols else None
     hover_template = _build_hover_template(dataset.ids, hover_cols)
@@ -80,6 +87,7 @@ def _colors_from_clusters(labels: np.ndarray) -> tuple[list[str], None]:
 
 def _colors_from_column(series) -> tuple[list[str], None]:
     import pandas as pd
+
     if pd.api.types.is_numeric_dtype(series):
         return list(series.astype(str)), None
     unique_vals = series.dropna().unique()
@@ -115,37 +123,41 @@ def _build_traces(
     traces = []
 
     if normal_mask.any():
-        traces.append(go.Scattergl(
-            x=coords[normal_mask, 0],
-            y=coords[normal_mask, 1],
-            mode="markers",
-            marker=dict(
-                color=[colors[i] for i in np.where(normal_mask)[0]],
-                size=5,
-                opacity=0.8,
-            ),
-            text=ids[normal_mask],
-            customdata=customdata[normal_mask] if customdata is not None else None,
-            hovertemplate=hover_template,
-            name="Points",
-            showlegend=False,
-        ))
+        traces.append(
+            go.Scattergl(
+                x=coords[normal_mask, 0],
+                y=coords[normal_mask, 1],
+                mode="markers",
+                marker=dict(
+                    color=[colors[i] for i in np.where(normal_mask)[0]],
+                    size=5,
+                    opacity=0.8,
+                ),
+                text=ids[normal_mask],
+                customdata=customdata[normal_mask] if customdata is not None else None,
+                hovertemplate=hover_template,
+                name="Points",
+                showlegend=False,
+            )
+        )
 
     if highlight_mask.any():
-        traces.append(go.Scattergl(
-            x=coords[highlight_mask, 0],
-            y=coords[highlight_mask, 1],
-            mode="markers",
-            marker=dict(
-                color="yellow",
-                size=10,
-                symbol="star",
-                line=dict(color="white", width=1),
-            ),
-            text=ids[highlight_mask],
-            customdata=customdata[highlight_mask] if customdata is not None else None,
-            hovertemplate=hover_template,
-            name="Highlighted",
-        ))
+        traces.append(
+            go.Scattergl(
+                x=coords[highlight_mask, 0],
+                y=coords[highlight_mask, 1],
+                mode="markers",
+                marker=dict(
+                    color="yellow",
+                    size=10,
+                    symbol="star",
+                    line=dict(color="white", width=1),
+                ),
+                text=ids[highlight_mask],
+                customdata=customdata[highlight_mask] if customdata is not None else None,
+                hovertemplate=hover_template,
+                name="Highlighted",
+            )
+        )
 
     return traces

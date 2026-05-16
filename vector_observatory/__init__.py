@@ -1,11 +1,11 @@
 """Vector Observatory — observability and debugging for embedding spaces."""
 
+from .clustering import DBSCANClusterer, HDBSCANClusterer, KMeansClusterer
 from .dataset import EmbeddingDataset
-from .pipeline.pipeline import EmbeddingPipeline
-from .reducers import UMAPReducer, TSNEReducer, PCAReducer
-from .clustering import HDBSCANClusterer, DBSCANClusterer, KMeansClusterer
-from .retrieval.knn import KNNIndex
 from .drift.comparison import DriftComparison
+from .pipeline.pipeline import EmbeddingPipeline
+from .reducers import PCAReducer, TSNEReducer, UMAPReducer
+from .retrieval.knn import KNNIndex
 from .storage.experiment import Experiment
 
 __version__ = "0.1.0"

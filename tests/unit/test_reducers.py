@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 from tests.fixtures.synthetic import isotropic_gaussian
-from vector_observatory.reducers import UMAPReducer, PCAReducer, TSNEReducer
+from vector_observatory.reducers import PCAReducer, TSNEReducer, UMAPReducer
 
 
 @pytest.fixture

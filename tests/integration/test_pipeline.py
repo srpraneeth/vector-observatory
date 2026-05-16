@@ -1,27 +1,25 @@
 """End-to-end pipeline integration test — parquet → reduce → cluster → store → reload."""
 
-import tempfile
-from pathlib import Path
-
-import numpy as np
 import pandas as pd
 import pytest
 
 from tests.fixtures.synthetic import tight_clusters
+from vector_observatory.clustering import KMeansClusterer
 from vector_observatory.pipeline.pipeline import EmbeddingPipeline
 from vector_observatory.reducers import PCAReducer
-from vector_observatory.clustering import KMeansClusterer
 from vector_observatory.storage.experiment import Experiment
 
 
 @pytest.fixture
 def parquet_file(tmp_path):
     ds = tight_clusters(n=100, n_clusters=3, dim=16)
-    df = pd.DataFrame({
-        "id": ds.ids,
-        "embedding": [row.tolist() for row in ds.embeddings],
-        "label": ds.metadata["label"].tolist(),
-    })
+    df = pd.DataFrame(
+        {
+            "id": ds.ids,
+            "embedding": [row.tolist() for row in ds.embeddings],
+            "label": ds.metadata["label"].tolist(),
+        }
+    )
     path = tmp_path / "test.parquet"
     df.to_parquet(path, index=False)
     return path

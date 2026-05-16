@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import numpy as np
 import plotly.graph_objects as go
 
 from ..drift.comparison import DriftResult
@@ -9,16 +8,17 @@ _COLOR_A = "#636EFA"
 _COLOR_B = "#EF553B"
 
 
-def build_drift_overlay(result: DriftResult, hover_cols_a: list[str] | None = None, hover_cols_b: list[str] | None = None) -> go.Figure:
+def build_drift_overlay(
+    result: DriftResult,
+    hover_cols_a: list[str] | None = None,
+    hover_cols_b: list[str] | None = None,
+) -> go.Figure:
     """Scatter plot with dataset A and B overlaid in shared coordinate space."""
     ds_a = result.dataset_a
     ds_b = result.dataset_b
 
     if ds_a.reduced_coords is None or ds_b.reduced_coords is None:
         raise ValueError("DriftResult datasets must have reduced_coords populated.")
-
-    hover_a = hover_cols_a or list(ds_a.metadata.columns)
-    hover_b = hover_cols_b or list(ds_b.metadata.columns)
 
     traces = [
         go.Scattergl(

@@ -11,7 +11,7 @@ class NeighborResult:
     query_id: str | int
     neighbor_ids: list[str | int]
     distances: list[float]
-    metadata: pd.DataFrame   # rows aligned with neighbor_ids
+    metadata: pd.DataFrame  # rows aligned with neighbor_ids
 
 
 class KNNIndex:
@@ -31,7 +31,6 @@ class KNNIndex:
     def build(self, dataset) -> None:
         """Build the index from an EmbeddingDataset."""
         from sklearn.neighbors import NearestNeighbors
-        from ..dataset import EmbeddingDataset  # avoid circular at module level
 
         self._ids = dataset.ids
         self._metadata = dataset.metadata
@@ -49,7 +48,7 @@ class KNNIndex:
         distances = distances[0]
 
         return NeighborResult(
-            query_id="",   # caller sets this
+            query_id="",  # caller sets this
             neighbor_ids=list(self._ids[indices]),
             distances=list(distances.astype(float)),
             metadata=self._metadata.iloc[indices].reset_index(drop=True),
@@ -57,7 +56,6 @@ class KNNIndex:
 
     def search_by_id(self, id_value, dataset, k: int = 10) -> NeighborResult:
         """Find k nearest neighbors for a point already in the index."""
-        from .dataset import EmbeddingDataset
         pos = dataset.index_of(id_value)
         result = self.search(dataset.embeddings[pos], k=k + 1)
         # Exclude the query point itself if it appears in results

@@ -17,6 +17,7 @@ class KMeansClusterer:
 
     def fit_predict(self, X: np.ndarray) -> np.ndarray:
         from sklearn.cluster import KMeans
+
         clusterer = KMeans(
             n_clusters=self._config.n_clusters,
             random_state=self._config.random_state,

@@ -1,14 +1,10 @@
-import tempfile
-from pathlib import Path
-
 import numpy as np
 import pytest
 
-from tests.fixtures.synthetic import isotropic_gaussian, tight_clusters
+from tests.fixtures.synthetic import isotropic_gaussian
 from vector_observatory.clustering import KMeansClusterer
 from vector_observatory.reducers import PCAReducer
 from vector_observatory.storage.experiment import Experiment
-from vector_observatory.storage.store import DuckDBStore
 
 
 @pytest.fixture

@@ -14,12 +14,12 @@ class EmbeddingDataset:
     All transforms (filter, with_reduction, with_clusters) return new instances.
     """
 
-    ids: np.ndarray           # (N,) primary keys
-    embeddings: np.ndarray    # (N, D) float32
-    metadata: pd.DataFrame    # (N, M) user-defined columns
+    ids: np.ndarray  # (N,) primary keys
+    embeddings: np.ndarray  # (N, D) float32
+    metadata: pd.DataFrame  # (N, M) user-defined columns
     name: str = ""
-    reduced_coords: np.ndarray | None = None   # (N, 2) after reduction
-    cluster_labels: np.ndarray | None = None   # (N,) int; -1 = noise
+    reduced_coords: np.ndarray | None = None  # (N, 2) after reduction
+    cluster_labels: np.ndarray | None = None  # (N,) int; -1 = noise
 
     # ------------------------------------------------------------------
     # Properties
@@ -60,6 +60,7 @@ class EmbeddingDataset:
         name: str = "",
     ) -> EmbeddingDataset:
         from .ingestion.parquet import load_parquet
+
         return load_parquet(path, id_col, embedding_col, metadata_cols, name)
 
     @classmethod
@@ -72,6 +73,7 @@ class EmbeddingDataset:
         name: str = "",
     ) -> EmbeddingDataset:
         from .ingestion.csv import load_csv
+
         return load_csv(path, id_col, embedding_col, metadata_cols, name)
 
     @classmethod
@@ -84,6 +86,7 @@ class EmbeddingDataset:
         name: str = "",
     ) -> EmbeddingDataset:
         from .ingestion.json_ import load_json
+
         return load_json(path, id_col, embedding_col, metadata_cols, name)
 
     # ------------------------------------------------------------------

@@ -26,6 +26,7 @@ class HDBSCANClusterer:
 
     def fit_predict(self, X: np.ndarray) -> np.ndarray:
         import hdbscan
+
         clusterer = hdbscan.HDBSCAN(
             min_cluster_size=self._config.min_cluster_size,
             min_samples=self._config.min_samples,

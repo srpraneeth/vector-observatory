@@ -3,6 +3,7 @@
 Used in unit tests to validate metrics and transformations against
 ground truth we control.
 """
+
 from __future__ import annotations
 
 import numpy as np
@@ -17,10 +18,14 @@ def isotropic_gaussian(n: int = 500, dim: int = 128, seed: int = 42) -> Embeddin
     embeddings = rng.standard_normal((n, dim)).astype(np.float32)
     ids = np.array([f"id_{i}" for i in range(n)])
     metadata = pd.DataFrame({"index": np.arange(n)})
-    return EmbeddingDataset(ids=ids, embeddings=embeddings, metadata=metadata, name="isotropic_gaussian")
+    return EmbeddingDataset(
+        ids=ids, embeddings=embeddings, metadata=metadata, name="isotropic_gaussian"
+    )
 
 
-def tight_clusters(n: int = 500, n_clusters: int = 5, dim: int = 64, seed: int = 42) -> EmbeddingDataset:
+def tight_clusters(
+    n: int = 500, n_clusters: int = 5, dim: int = 64, seed: int = 42
+) -> EmbeddingDataset:
     """Well-separated Gaussian clusters — expected: clear cluster structure."""
     rng = np.random.default_rng(seed)
     centers = rng.standard_normal((n_clusters, dim)) * 10
@@ -28,14 +33,16 @@ def tight_clusters(n: int = 500, n_clusters: int = 5, dim: int = 64, seed: int =
     # distribute remainder so total is exactly n
     sizes = [base + (1 if i < n % n_clusters else 0) for i in range(n_clusters)]
     embeddings, labels = [], []
-    for i, (center, size) in enumerate(zip(centers, sizes)):
+    for i, (center, size) in enumerate(zip(centers, sizes, strict=False)):
         pts = center + rng.standard_normal((size, dim)) * 0.5
         embeddings.append(pts)
         labels.extend([i] * size)
     embeddings = np.vstack(embeddings).astype(np.float32)
     ids = np.array([f"id_{i}" for i in range(len(embeddings))])
     metadata = pd.DataFrame({"label": labels})
-    return EmbeddingDataset(ids=ids, embeddings=embeddings, metadata=metadata, name="tight_clusters")
+    return EmbeddingDataset(
+        ids=ids, embeddings=embeddings, metadata=metadata, name="tight_clusters"
+    )
 
 
 def collapsed_embeddings(n: int = 500, dim: int = 128, seed: int = 42) -> EmbeddingDataset:

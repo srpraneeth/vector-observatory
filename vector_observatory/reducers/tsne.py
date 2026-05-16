@@ -30,6 +30,7 @@ class TSNEReducer:
 
     def fit_transform(self, X: np.ndarray) -> np.ndarray:
         from sklearn.manifold import TSNE
+
         reducer = TSNE(
             n_components=self._config.n_components,
             perplexity=self._config.perplexity,
@@ -41,8 +42,7 @@ class TSNEReducer:
 
     def transform(self, X: np.ndarray) -> np.ndarray:
         raise NotImplementedError(
-            "t-SNE does not support projecting new points. "
-            "Use UMAPReducer if you need transform()."
+            "t-SNE does not support projecting new points. Use UMAPReducer if you need transform()."
         )
 
     @property

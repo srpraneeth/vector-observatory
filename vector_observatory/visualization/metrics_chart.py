@@ -4,7 +4,6 @@ import numpy as np
 import plotly.graph_objects as go
 
 from ..metrics.geometry import GeometryMetrics
-from ..metrics.cluster import ClusterMetrics
 
 
 def build_geometry_metrics_chart(metrics: GeometryMetrics) -> go.Figure:
@@ -12,7 +11,9 @@ def build_geometry_metrics_chart(metrics: GeometryMetrics) -> go.Figure:
     names = ["Anisotropy", "Isotropy Score", "Intrinsic Dim"]
     values = [metrics.anisotropy, metrics.isotropy_score, metrics.intrinsic_dim]
 
-    fig = go.Figure(go.Bar(x=names, y=values, text=[f"{v:.3f}" for v in values], textposition="outside"))
+    fig = go.Figure(
+        go.Bar(x=names, y=values, text=[f"{v:.3f}" for v in values], textposition="outside")
+    )
     fig.update_layout(title="Embedding Geometry Metrics", template="plotly_dark", height=350)
     return fig
 

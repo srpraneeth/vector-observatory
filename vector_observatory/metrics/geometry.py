@@ -86,7 +86,7 @@ def _compute_isotropy(embeddings: np.ndarray, rng: np.random.Generator) -> float
     random_dirs /= np.linalg.norm(random_dirs, axis=1, keepdims=True) + 1e-10
 
     # Z(c) for each of the 200 directions
-    Z = np.exp(E_normalized @ random_dirs.T).mean(axis=0)   # shape (200,)
+    Z = np.exp(E_normalized @ random_dirs.T).mean(axis=0)  # shape (200,)
     return float(Z.min() / Z.max()) if Z.max() > 0 else 0.0
 
 

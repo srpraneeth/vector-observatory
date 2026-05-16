@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import ast
 import json
-from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -34,7 +33,9 @@ def _build_dataset(
     if id_col not in df.columns:
         raise ValueError(f"ID column {id_col!r} not found. Available: {list(df.columns)}")
     if embedding_col not in df.columns:
-        raise ValueError(f"Embedding column {embedding_col!r} not found. Available: {list(df.columns)}")
+        raise ValueError(
+            f"Embedding column {embedding_col!r} not found. Available: {list(df.columns)}"
+        )
 
     ids = df[id_col].to_numpy().astype(str)
     embeddings = _parse_embedding_column(df[embedding_col])

@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
-from tests.fixtures.synthetic import tight_clusters, isotropic_gaussian
-from vector_observatory.clustering import HDBSCANClusterer, DBSCANClusterer, KMeansClusterer
+from tests.fixtures.synthetic import tight_clusters
+from vector_observatory.clustering import DBSCANClusterer, HDBSCANClusterer, KMeansClusterer
 
 
 @pytest.fixture
@@ -30,7 +30,7 @@ def test_dbscan_output_shape(clusterable):
 def test_kmeans_output_shape(clusterable):
     labels = KMeansClusterer(n_clusters=3).fit_predict(clusterable.embeddings)
     assert labels.shape == (200,)
-    assert set(labels) == {0, 1, 2}   # no noise for kmeans
+    assert set(labels) == {0, 1, 2}  # no noise for kmeans
 
 
 def test_kmeans_no_noise(clusterable):
@@ -38,11 +38,14 @@ def test_kmeans_no_noise(clusterable):
     assert -1 not in labels
 
 
-@pytest.mark.parametrize("ClustererClass,kwargs", [
-    (HDBSCANClusterer, {"min_cluster_size": 5}),
-    (DBSCANClusterer, {"eps": 2.0}),
-    (KMeansClusterer, {"n_clusters": 3}),
-])
+@pytest.mark.parametrize(
+    "ClustererClass,kwargs",
+    [
+        (HDBSCANClusterer, {"min_cluster_size": 5}),
+        (DBSCANClusterer, {"eps": 2.0}),
+        (KMeansClusterer, {"n_clusters": 3}),
+    ],
+)
 def test_config_has_type(ClustererClass, kwargs, clusterable):
     c = ClustererClass(**kwargs)
     assert "type" in c.config

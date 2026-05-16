@@ -1,5 +1,4 @@
 import numpy as np
-import pytest
 
 from tests.fixtures.synthetic import isotropic_gaussian, tight_clusters
 from vector_observatory.dataset import EmbeddingDataset
@@ -17,7 +16,7 @@ def test_with_reduction_immutable():
     ds = isotropic_gaussian(n=50, dim=16)
     coords = np.random.rand(50, 2).astype(np.float32)
     ds2 = ds.with_reduction(coords)
-    assert ds.reduced_coords is None        # original unchanged
+    assert ds.reduced_coords is None  # original unchanged
     assert ds2.reduced_coords is not None
 
 
@@ -63,6 +62,7 @@ def test_filter_preserves_alignment():
 
 def test_search_metadata():
     import pandas as pd
+
     ids = np.array(["a", "b", "c"])
     embs = np.random.rand(3, 8).astype(np.float32)
     meta = pd.DataFrame({"text": ["hello world", "foo bar", "hello there"]})

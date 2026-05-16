@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Generator
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Generator
+from typing import Any
 
 import duckdb
 import numpy as np
@@ -79,6 +80,7 @@ CREATE TABLE IF NOT EXISTS schema_version (
 
 def _to_json(obj: Any) -> str:
     """json.dumps with numpy scalar/array support."""
+
     def _default(o: Any) -> Any:
         if isinstance(o, np.integer):
             return int(o)
@@ -87,6 +89,7 @@ def _to_json(obj: Any) -> str:
         if isinstance(o, np.ndarray):
             return o.tolist()
         raise TypeError(f"Object of type {type(o).__name__} is not JSON serializable")
+
     return json.dumps(obj, default=_default)
 
 
@@ -128,13 +131,11 @@ class DuckDBStore:
 
     def save_dataset(self, dataset: EmbeddingDataset) -> None:
         rows = []
-        for i, (id_val, emb) in enumerate(zip(dataset.ids, dataset.embeddings)):
+        for i, (id_val, emb) in enumerate(zip(dataset.ids, dataset.embeddings, strict=False)):
             meta = dataset.metadata.iloc[i].to_dict()
             rows.append((str(id_val), dataset.name, emb.tolist(), _to_json(meta)))
         with self._cx() as conn:
-            conn.executemany(
-                "INSERT OR REPLACE INTO datasets VALUES (?, ?, ?, ?)", rows
-            )
+            conn.executemany("INSERT OR REPLACE INTO datasets VALUES (?, ?, ?, ?)", rows)
 
     def load_dataset(self, dataset_name: str) -> EmbeddingDataset:
         with self._cx() as conn:
@@ -149,7 +150,9 @@ class DuckDBStore:
         embeddings = np.array([r[1] for r in rows], dtype=np.float32)
         meta_records = [json.loads(r[2]) for r in rows]
         metadata = pd.DataFrame(meta_records)
-        return EmbeddingDataset(ids=ids, embeddings=embeddings, metadata=metadata, name=dataset_name)
+        return EmbeddingDataset(
+            ids=ids, embeddings=embeddings, metadata=metadata, name=dataset_name
+        )
 
     def list_datasets(self) -> list[str]:
         with self._cx() as conn:
@@ -172,7 +175,7 @@ class DuckDBStore:
         run_id = config["run_id"]
 
         rows: list[tuple] = []
-        for i, (id_val, emb) in enumerate(zip(dataset.ids, dataset.embeddings)):
+        for i, (id_val, emb) in enumerate(zip(dataset.ids, dataset.embeddings, strict=False)):
             meta = dataset.metadata.iloc[i].to_dict()
             rows.append((str(id_val), dataset.name, emb.tolist(), _to_json(meta)))
 
@@ -180,14 +183,14 @@ class DuckDBStore:
         if dataset.reduced_coords is not None:
             reduction_rows = [
                 (str(id_val), dataset.name, run_id, float(x), float(y))
-                for id_val, (x, y) in zip(dataset.ids, dataset.reduced_coords)
+                for id_val, (x, y) in zip(dataset.ids, dataset.reduced_coords, strict=False)
             ]
 
         cluster_rows: list[tuple] = []
         if dataset.cluster_labels is not None:
             cluster_rows = [
                 (str(id_val), dataset.name, run_id, int(label), bool(label == -1))
-                for id_val, label in zip(dataset.ids, dataset.cluster_labels)
+                for id_val, label in zip(dataset.ids, dataset.cluster_labels, strict=False)
             ]
 
         reducer_cfg = config.get("reducer", {})
@@ -196,9 +199,13 @@ class DuckDBStore:
         with self._cx() as conn:
             conn.executemany("INSERT OR REPLACE INTO datasets VALUES (?, ?, ?, ?)", rows)
             if reduction_rows:
-                conn.executemany("INSERT OR REPLACE INTO reductions VALUES (?, ?, ?, ?, ?)", reduction_rows)
+                conn.executemany(
+                    "INSERT OR REPLACE INTO reductions VALUES (?, ?, ?, ?, ?)", reduction_rows
+                )
             if cluster_rows:
-                conn.executemany("INSERT OR REPLACE INTO clusters VALUES (?, ?, ?, ?, ?)", cluster_rows)
+                conn.executemany(
+                    "INSERT OR REPLACE INTO clusters VALUES (?, ?, ?, ?, ?)", cluster_rows
+                )
             conn.execute(
                 "INSERT OR REPLACE INTO runs VALUES (?, ?, ?, ?, ?, ?, ?, ?, now())",
                 [
