@@ -89,6 +89,15 @@ The drift score (MMD) and overlay plot tell you how much the two distributions h
         return
 
     st.divider()
+
+    if ds_a.dim != ds_b.dim:
+        st.error(
+            f"Embedding dimensions don't match: dataset A is {ds_a.dim}-dim, "
+            f"dataset B is {ds_b.dim}-dim. Drift comparison requires both datasets "
+            "to use the same embedding model."
+        )
+        return
+
     if st.button("Run Comparison", type="primary", use_container_width=True):
         with st.spinner("Fitting combined UMAP on A ∪ B…"):
             comparison = DriftComparison(ds_a, ds_b, reducer=UMAPReducer())

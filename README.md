@@ -45,6 +45,27 @@ You bring an embeddings file. Vector Observatory runs dimensionality reduction, 
 
 All results are stored locally in DuckDB — one file per experiment, no external services needed.
 
+## How it looks
+
+**Experiment list**
+![Experiment list](images/Screenshot%20Experiments.png)
+
+**Explore — UMAP scatter with metadata filters and neighbor inspection**
+![Explore tab](images/Screenshot%20Explore.png)
+
+**Overview — dataset stats and metadata distributions**
+![Overview tab 1](images/Screenshot%20Overview1.png)
+![Overview tab 2](images/Screenshot%20Overview2.png)
+
+**Clusters — breakdown table with per-cluster metrics**
+![Clusters tab](images/Screenshot%20Clusters.png)
+
+**Metrics — embedding health dashboard**
+![Metrics tab](images/Screenshot%20Metrics.png)
+
+**Outliers — most isolated points by kNN distance**
+![Outliers tab](images/Screenshot%20Outliers.png)
+
 ## Quickstart
 
 **Requirements:** Python 3.12+, [uv](https://docs.astral.sh/uv/)
