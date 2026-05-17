@@ -1,7 +1,6 @@
 """Basic analysis example — demonstrates headless library usage without Streamlit."""
 
-from vector_observatory import EmbeddingPipeline, UMAPReducer, HDBSCANClusterer
-from vector_observatory.storage.experiment import Experiment
+from vector_observatory import EmbeddingPipeline, HDBSCANClusterer, UMAPReducer
 
 result = (
     EmbeddingPipeline()
@@ -24,7 +23,7 @@ print(f"Clusters found: {ds.n_clusters}")
 print(f"Noise fraction: {ds.noise_fraction:.1%}")
 
 geo = result.geometry_metrics
-print(f"\nEmbedding health:")
+print("\nEmbedding health:")
 print(f"  Anisotropy:      {geo.anisotropy:.3f}  (>0.5 = collapse risk)")
 print(f"  Isotropy score:  {geo.isotropy_score:.3f}")
 print(f"  Intrinsic dim:   {geo.intrinsic_dim:.1f}  (of {ds.dim} total)")

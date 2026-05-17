@@ -14,7 +14,7 @@ from vector_observatory.storage.experiment import Experiment
 class AppState:
     """Typed wrapper around st.session_state."""
 
-    view: str = "list"                         # "list" | "new" | "detail"
+    view: str = "list"  # "list" | "new" | "detail"
     active_experiment: Experiment | None = None
     active_dataset: EmbeddingDataset | None = None
     active_run_id: str | None = None

@@ -1,11 +1,10 @@
 """Explore tab — scatter + filters + neighbor inspection."""
 
-import numpy as np
 import streamlit as st
-
-from state import AppState
 from components.filter_bar import render_filter_bar
 from components.neighbor_panel import render_neighbor_panel
+from state import AppState
+
 from vector_observatory.visualization.scatter import build_scatter_2d
 
 
@@ -54,7 +53,9 @@ def render(state: AppState) -> None:
             hover_cols=list(visible_ds.metadata.columns),
             highlight_ids=[state.selected_point_id] if state.selected_point_id else None,
         )
-        event = st.plotly_chart(fig, use_container_width=True, on_select="rerun", key="explore_scatter")
+        event = st.plotly_chart(
+            fig, use_container_width=True, on_select="rerun", key="explore_scatter"
+        )
 
     if event and event.get("selection", {}).get("points"):
         clicked_id = event["selection"]["points"][0].get("text")

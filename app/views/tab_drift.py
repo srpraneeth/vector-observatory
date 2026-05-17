@@ -1,15 +1,16 @@
 """Drift tab — compare this experiment against another."""
 
 import io
-import streamlit as st
-import pandas as pd
 
+import pandas as pd
+import streamlit as st
 from state import AppState
+
 from vector_observatory.drift.comparison import DriftComparison
-from vector_observatory.reducers import UMAPReducer
-from vector_observatory.visualization.drift_overlay import build_drift_overlay
-from vector_observatory.storage.experiment import Experiment
 from vector_observatory.ingestion.validators import _build_dataset
+from vector_observatory.reducers import UMAPReducer
+from vector_observatory.storage.experiment import Experiment
+from vector_observatory.visualization.drift_overlay import build_drift_overlay
 
 
 def render(state: AppState) -> None:
@@ -30,10 +31,7 @@ The drift score (MMD) and overlay plot tell you how much the two distributions h
 
     st.subheader("Compare Against")
 
-    all_experiments = [
-        e for e in Experiment.list_all()
-        if e != state.active_experiment.name
-    ]
+    all_experiments = [e for e in Experiment.list_all() if e != state.active_experiment.name]
 
     compare_mode = st.radio(
         "Source",
@@ -46,21 +44,25 @@ The drift score (MMD) and overlay plot tell you how much the two distributions h
 
     if compare_mode == "Saved experiment":
         if not all_experiments:
-            st.warning("No other experiments saved yet. Create one first, or upload a file directly.")
+            st.warning(
+                "No other experiments saved yet. Create one first, or upload a file directly."
+            )
             return
         selected = st.selectbox("Experiment", all_experiments)
         if st.button("Load experiment", use_container_width=True):
             project_b = Experiment.load(selected)
-            datasets_b = experiment_b.store.list_datasets()
+            datasets_b = project_b.store.list_datasets()
             if datasets_b:
-                runs_b = experiment_b.store.list_runs(datasets_b[0])
+                runs_b = project_b.store.list_runs(datasets_b[0])
                 if runs_b:
-                    ds_b = experiment_b.store.load_run(datasets_b[0], runs_b[0]["run_id"])
+                    ds_b = project_b.store.load_run(datasets_b[0], runs_b[0]["run_id"])
                     st.session_state["drift_ds_b"] = ds_b
         ds_b = st.session_state.get("drift_ds_b")
 
     else:
-        st.caption("Upload a second embeddings file — e.g. a newer model version or a different split.")
+        st.caption(
+            "Upload a second embeddings file — e.g. a newer model version or a different split."
+        )
         uploaded = st.file_uploader("Embeddings file", type=["parquet", "csv", "json"])
         if uploaded:
             buf = io.BytesIO(uploaded.read())
@@ -76,7 +78,9 @@ The drift score (MMD) and overlay plot tell you how much the two distributions h
             with c1:
                 id_col_b = st.selectbox("ID column", cols_b, key="drift_id")
             with c2:
-                emb_col_b = st.selectbox("Embedding column", cols_b, index=len(cols_b) - 1, key="drift_emb")
+                emb_col_b = st.selectbox(
+                    "Embedding column", cols_b, index=len(cols_b) - 1, key="drift_emb"
+                )
             meta_b = [c for c in cols_b if c not in (id_col_b, emb_col_b)]
             name_b = uploaded.name.rsplit(".", 1)[0]
             ds_b = _build_dataset(df_b, id_col_b, emb_col_b, meta_b or None, name_b)
@@ -95,10 +99,15 @@ The drift score (MMD) and overlay plot tell you how much the two distributions h
     if result is None:
         return
 
-    st.metric("MMD Score", f"{result.mmd_score:.4f}",
-              help="Maximum Mean Discrepancy. 0 = identical distributions.")
+    st.metric(
+        "MMD Score",
+        f"{result.mmd_score:.4f}",
+        help="Maximum Mean Discrepancy. 0 = identical distributions.",
+    )
 
-    st.plotly_chart(build_drift_overlay(result), use_container_width=True, key="drift_overlay_chart")
+    st.plotly_chart(
+        build_drift_overlay(result), use_container_width=True, key="drift_overlay_chart"
+    )
 
     if result.cluster_overlap:
         st.subheader("Cluster Overlap")

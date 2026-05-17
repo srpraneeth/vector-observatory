@@ -19,7 +19,9 @@ def render_filter_bar(ds: EmbeddingDataset) -> np.ndarray | None:
     if ds.cluster_labels is not None:
         unique_clusters = sorted(set(ds.cluster_labels.tolist()))
         cluster_labels_display = ["Noise" if c == -1 else f"Cluster {c}" for c in unique_clusters]
-        selected = st.multiselect("Clusters", cluster_labels_display, default=cluster_labels_display)
+        selected = st.multiselect(
+            "Clusters", cluster_labels_display, default=cluster_labels_display
+        )
         selected_ids = [unique_clusters[cluster_labels_display.index(s)] for s in selected]
         if len(selected_ids) < len(unique_clusters):
             active_filters.append(np.isin(ds.cluster_labels, selected_ids))

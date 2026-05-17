@@ -1,9 +1,8 @@
 """Vector Observatory — single-page app with experiment-centric navigation."""
 
 import streamlit as st
-from pathlib import Path
-
 from state import AppState, load_experiment
+
 from vector_observatory.storage.experiment import Experiment
 
 st.set_page_config(
@@ -35,10 +34,7 @@ with st.sidebar:
     if experiments:
         st.subheader("Experiments")
         for name in experiments:
-            is_active = (
-                state.active_experiment is not None
-                and state.active_experiment.name == name
-            )
+            is_active = state.active_experiment is not None and state.active_experiment.name == name
             label = f"**{name}**" if is_active else name
             if st.button(label, key=f"exp_{name}", use_container_width=True):
                 with st.spinner(f"Loading {name}…"):
@@ -53,12 +49,15 @@ with st.sidebar:
 
 if state.view == "new":
     from views.new_experiment import render
+
     render(state)
 
 elif state.view == "detail" and state.active_experiment is not None:
     from views.detail import render
+
     render(state)
 
 else:
     from views.experiment_list import render
+
     render(state)

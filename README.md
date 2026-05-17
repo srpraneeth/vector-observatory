@@ -196,19 +196,23 @@ Each experiment is a single `.duckdb` file in `data/experiments/`. You can copy,
 - [x] Movies demo — pre-built experiment ready on first launch
 
 ### v0.2 — Quick wins
-- [ ] Metadata distributions — histograms and value counts per column in Overview
-- [ ] Export — download the current filtered view as CSV
-- [ ] Outlier detection — surface the most isolated points by distance to kNN
-- [ ] Per-cluster metrics — anisotropy and intrinsic dimensionality broken down per cluster
+- [x] Metadata distributions — histograms and value counts per column in Overview
+- [x] Export — download the current filtered view as CSV
+- [x] Outlier detection — surface the most isolated points by distance to kNN
+- [x] Per-cluster metrics — anisotropy and intrinsic dimensionality broken down per cluster
 
 ### v0.3 — Deeper experiment management
-- [ ] Re-run — apply a different reducer or clusterer to an existing experiment without re-uploading
-- [ ] Cluster labeling — name clusters (e.g. "Cluster 0 → Action/Thriller") and persist the labels
-- [ ] Semantic deduplication — find near-duplicate embeddings above a cosine similarity threshold
+- [x] Re-run — apply a different reducer or clusterer to an existing experiment without re-uploading
+- [x] Cluster labeling — name clusters (e.g. "Cluster 0 → Action/Thriller") and persist the labels
+- [x] Semantic deduplication — find near-duplicate embeddings above a cosine similarity threshold
+- [x] Cluster stability — measure how much cluster assignments change across runs (Jaccard overlap)
+- [x] Hard negative inspection — surface pairs that are close in embedding space but semantically distant
 
 ### v1.0 — Full observability
 - [ ] Multi-run comparison — compare UMAP vs t-SNE or different cluster settings side-by-side
 - [ ] Embedding diff — given two runs on the same IDs, show which points moved the most
+- [ ] Temporal analysis — track how embedding geometry evolves across model versions or time windows
+- [ ] Retrieval quality evaluation — measure precision@k / recall@k against a ground-truth query set
 - [ ] Annotation mode — mark individual points as good/bad/interesting and export those labels
 - [ ] Real encoder integration — paste raw text, encode it live, find nearest neighbors
 

@@ -3,15 +3,15 @@
 import io
 import uuid
 
-import streamlit as st
 import pandas as pd
+import streamlit as st
 
+from vector_observatory.clustering import DBSCANClusterer, HDBSCANClusterer, KMeansClusterer
 from vector_observatory.ingestion.validators import _build_dataset
-from vector_observatory.reducers import UMAPReducer, TSNEReducer, PCAReducer
-from vector_observatory.clustering import HDBSCANClusterer, DBSCANClusterer, KMeansClusterer
-from vector_observatory.retrieval.knn import KNNIndex
-from vector_observatory.metrics.geometry import compute_geometry_metrics
 from vector_observatory.metrics.cluster import compute_cluster_metrics
+from vector_observatory.metrics.geometry import compute_geometry_metrics
+from vector_observatory.reducers import PCAReducer, TSNEReducer, UMAPReducer
+from vector_observatory.retrieval.knn import KNNIndex
 from vector_observatory.storage.experiment import Experiment
 
 

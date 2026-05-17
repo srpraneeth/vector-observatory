@@ -17,6 +17,6 @@ result = index.search_by_id("your_query_id", ds, k=10)
 
 print(f"Query: {result.query_id}")
 print(f"\nTop {len(result.neighbor_ids)} neighbors:")
-for i, (nid, dist) in enumerate(zip(result.neighbor_ids, result.distances)):
+for i, (nid, dist) in enumerate(zip(result.neighbor_ids, result.distances, strict=False)):
     row = result.metadata.iloc[i]
-    print(f"  {i+1}. [{dist:.4f}] {nid} — {row.to_dict()}")
+    print(f"  {i + 1}. [{dist:.4f}] {nid} — {row.to_dict()}")

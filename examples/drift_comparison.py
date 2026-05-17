@@ -1,6 +1,6 @@
 """Drift comparison example — compare two embedding datasets."""
 
-from vector_observatory import EmbeddingDataset, DriftComparison, UMAPReducer
+from vector_observatory import DriftComparison, EmbeddingDataset, UMAPReducer
 
 ds_v1 = EmbeddingDataset.from_parquet(
     "path/to/model_v1_embeddings.parquet",

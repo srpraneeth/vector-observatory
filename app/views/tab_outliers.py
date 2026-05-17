@@ -3,8 +3,8 @@
 import numpy as np
 import pandas as pd
 import streamlit as st
-
 from state import AppState
+
 from vector_observatory.metrics.outliers import compute_outlier_scores
 
 
@@ -15,8 +15,13 @@ def render(state: AppState) -> None:
     with col1:
         top_n = st.slider("Show top N outliers", min_value=5, max_value=100, value=20, step=5)
     with col2:
-        k = st.number_input("kNN k", min_value=2, max_value=20, value=5,
-                            help="Number of neighbors used to compute isolation score.")
+        k = st.number_input(
+            "kNN k",
+            min_value=2,
+            max_value=20,
+            value=5,
+            help="Number of neighbors used to compute isolation score.",
+        )
 
     with st.spinner("Computing outlier scores…"):
         scores = compute_outlier_scores(ds.embeddings, k=int(k))

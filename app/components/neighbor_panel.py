@@ -6,7 +6,9 @@ from vector_observatory.dataset import EmbeddingDataset
 from vector_observatory.retrieval.knn import KNNIndex
 
 
-def render_neighbor_panel(selected_id, index: KNNIndex, dataset: EmbeddingDataset, k: int = 10) -> None:
+def render_neighbor_panel(
+    selected_id, index: KNNIndex, dataset: EmbeddingDataset, k: int = 10
+) -> None:
     """Render nearest neighbors for a selected point."""
     st.subheader(f"Nearest Neighbors — ID: {selected_id}")
 
@@ -25,7 +27,7 @@ def render_neighbor_panel(selected_id, index: KNNIndex, dataset: EmbeddingDatase
 
     with col2:
         st.caption(f"Top {k} nearest neighbors")
-        import pandas as pd
+
         neighbor_df = result.metadata.copy()
         neighbor_df.insert(0, "id", result.neighbor_ids)
         neighbor_df.insert(1, "distance", [f"{d:.4f}" for d in result.distances])

@@ -71,6 +71,13 @@ CREATE TABLE IF NOT EXISTS drift_reductions (
     PRIMARY KEY (id, dataset_name, comparison_id)
 );
 
+CREATE TABLE IF NOT EXISTS cluster_labels (
+    run_id     VARCHAR,
+    cluster_id INTEGER,
+    label      VARCHAR,
+    PRIMARY KEY (run_id, cluster_id)
+);
+
 CREATE TABLE IF NOT EXISTS schema_version (
     version INTEGER PRIMARY KEY,
     applied_at TIMESTAMP DEFAULT now()
@@ -256,3 +263,29 @@ class DuckDBStore:
             {"run_id": r[0], "reducer": r[1], "clusterer": r[2], "created_at": str(r[3])}
             for r in rows
         ]
+
+    # ------------------------------------------------------------------
+    # Cluster labels
+    # ------------------------------------------------------------------
+
+    def save_cluster_label(self, run_id: str, cluster_id: int, label: str) -> None:
+        with self._cx() as conn:
+            conn.execute(
+                "INSERT OR REPLACE INTO cluster_labels VALUES (?, ?, ?)",
+                [run_id, cluster_id, label],
+            )
+
+    def delete_cluster_label(self, run_id: str, cluster_id: int) -> None:
+        with self._cx() as conn:
+            conn.execute(
+                "DELETE FROM cluster_labels WHERE run_id=? AND cluster_id=?",
+                [run_id, cluster_id],
+            )
+
+    def load_cluster_labels(self, run_id: str) -> dict[int, str]:
+        with self._cx() as conn:
+            rows = conn.execute(
+                "SELECT cluster_id, label FROM cluster_labels WHERE run_id=?",
+                [run_id],
+            ).fetchall()
+        return {int(r[0]): r[1] for r in rows}

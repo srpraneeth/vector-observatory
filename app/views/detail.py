@@ -1,8 +1,8 @@
 """Experiment detail — tabbed view over a loaded experiment."""
 
 import streamlit as st
-
 from state import AppState
+
 from vector_observatory.storage.experiment import Experiment
 
 
@@ -51,30 +51,71 @@ def render(state: AppState) -> None:
     st.divider()
 
     # Tabs
-    tab_overview, tab_explore, tab_clusters, tab_metrics, tab_drift, tab_outliers = st.tabs([
-        "Overview", "Explore", "Clusters", "Metrics", "Drift", "Outliers"
-    ])
+    (
+        tab_overview,
+        tab_explore,
+        tab_clusters,
+        tab_metrics,
+        tab_drift,
+        tab_outliers,
+        tab_rerun,
+        tab_dedup,
+        tab_hard_neg,
+    ) = st.tabs(
+        [
+            "Overview",
+            "Explore",
+            "Clusters",
+            "Metrics",
+            "Drift",
+            "Outliers",
+            "Runs",
+            "Dedup",
+            "Hard Negatives",
+        ]
+    )
 
     with tab_overview:
         from views.tab_overview import render as render_tab
+
         render_tab(state)
 
     with tab_explore:
         from views.tab_explore import render as render_tab
+
         render_tab(state)
 
     with tab_clusters:
         from views.tab_clusters import render as render_tab
+
         render_tab(state)
 
     with tab_metrics:
         from views.tab_metrics import render as render_tab
+
         render_tab(state)
 
     with tab_drift:
         from views.tab_drift import render as render_tab
+
         render_tab(state)
 
     with tab_outliers:
         from views.tab_outliers import render as render_tab
+
+        render_tab(state)
+
+    with tab_rerun:
+        from views.tab_rerun import render as render_tab
+
+        render_tab(state)
+
+    with tab_dedup:
+        from views.tab_dedup import render as render_tab
+
+        render_tab(state)
+
+    with tab_hard_neg:
+        from views.tab_hard_negatives import render as render_tab
+
         render_tab(state)
