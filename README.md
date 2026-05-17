@@ -238,5 +238,3 @@ Each experiment is a single `.duckdb` file in `data/experiments/`. You can copy,
 - [ ] Real encoder integration — paste raw text, encode it live, find nearest neighbors
 
 ---
-
-MIT License
